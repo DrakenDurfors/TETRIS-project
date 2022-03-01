@@ -3,36 +3,15 @@
 #include <pic32mx.h>
 #include "function.h"
 
-// define the size of the 
-#define ROW 20
-#define COL 10
-#define MARGIN 2 // pruposed attempt at dealing with any and all out of bounds issues (to be implemented)
+
+#define MARGIN 2
 
 // define the starting point (where blocks will be created)
 #define startR 1
 #define startC 5
 
-// define global variables
-int highscore = 0;
-int level = 0;
-
 char Field[ROW + (2 * MARGIN)][COL + (2 * MARGIN)];
-char displayField[ROW][COL];
 int pos[2] = {startR, startC};
-
-char CurrentPiece[5][5] = {
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'}};
-
-char nextPiece[5][5] = {
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'}};
 
 void placeBlock()
 {
@@ -177,6 +156,8 @@ void newBlock()
     {
         // proper game over function needed:
         printf("Game over!");
+        display_string(1, "Game over!");
+        display_string(2, "Enter name:");
     }
 }
 
@@ -417,128 +398,6 @@ void startupReset()
 void main()
 {
     srand(TMR2);
-    int points = 0;
-    int position[] = {1, 1}; // This defines the central position of the figure
-    // pickBlock(CurrentPiece);
-    // pickBlock(nextPiece);
-
-    char testpiece[5][5] = {
-        {'0', '0', '0', '0', '0'},
-        {'0', '0', '0', '0', '0'},
-        {'1', '1', '1', '1', '1'},
-        {'0', '0', '0', '0', '0'},
-        {'0', '0', '0', '0', '0'}};
-    // pickBlock(testpiece);
-    replaceArray(CurrentPiece, testpiece);
-
     startupReset();
-    displayTest();
 
-    moveRight();
-    moveRight();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    moveLeft();
-    moveLeft();
-    moveLeft();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveDown();
-    displayTest();
-    moveRight();
-    displayTest();
-    moveRight();
-    displayTest();
-    moveRight();
-    displayTest();
-    moveRight();
-    displayTest();
-    moveLeft();
-    displayTest();
-    moveLeft();
-    displayTest();
-    moveLeft();
-    displayTest();
-    moveLeft();
-    displayTest();
-    moveLeft();
-    displayTest();
-    moveLeft();
-    displayTest();
-    moveLeft();
-    displayTest();
-    moveLeft();
-    displayTest();
 }
