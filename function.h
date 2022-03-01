@@ -3,6 +3,27 @@
 #define COMMAND_MODE (PORTFCLR = 0x10)
 #define DATA_MODE (PORTFSET = 0x10)
 
+
+//game logic
+ 
+
+//game logic functions:
+void placeBlock();
+void removeBlock();
+void replaceArray(char arrayA[5][5], char arrayB[5][5]);
+void pickBlock(char block[5][5]);
+void newBlock();
+void moveLeft();
+void moveRight();
+void moveDown();
+void rotate();
+void getDisplay();
+void displayTest();
+void startupReset();
+
+
+
+
 unsigned char bitarray[4][60];
 unsigned char block_bitarray[2][24];
 
@@ -39,38 +60,4 @@ void game_array();
 void show_nextblock();
 void name_meny();
 
-//game logic
-#define ROW 20
-#define COL 10
-char displayField[ROW][COL];
-int highscore = 0;
-int level = 0;
-
-char CurrentPiece[5][5] = {
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'}};
-
-char nextPiece[5][5] = {
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'}};
-
-//functions:
-void placeBlock();
-void removeBlock();
-void replaceArray(char arrayA[5][5], char arrayB[5][5]);
-void pickBlock(char block[5][5]);
-void newBlock();
-void moveLeft();
-void moveRight();
-void moveDown();
-void rotate();
-void getDisplay();
-void displayTest();
-void startupReset();
 

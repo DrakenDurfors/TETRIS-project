@@ -155,7 +155,6 @@ void newBlock()
     else
     {
         // proper game over function needed:
-        printf("Game over!");
         display_string(1, "Game over!");
         display_string(2, "Enter name:");
     }
@@ -360,16 +359,16 @@ void getDisplay()
 // Following function is only for terminal testiing purpouses:
 void displayTest()
 {
-    int r, c;
-    for (r = MARGIN; r < ROW + MARGIN; r++)
-    {
-        for (c = MARGIN; c < COL + MARGIN; c++)
-        {
-            printf("%c", Field[r][c]);
-        }
-        printf("\n");
-    }
-    printf("----------\n");
+    // int r, c;
+    // for (r = MARGIN; r < ROW + MARGIN; r++)
+    // {
+    //     for (c = MARGIN; c < COL + MARGIN; c++)
+    //     {
+    //         printf("%c", Field[r][c]);
+    //     }
+    //     printf("\n");
+    // }
+    // printf("----------\n");
 }
 
 void startupReset()
@@ -395,9 +394,9 @@ void startupReset()
     pickBlock(nextPiece);
 }
 
-void main()
-{
-    srand(TMR2);
-    startupReset();
+// void manualStart()
+// {
+//     srand(TMR2);
+//     startupReset();
 
-}
+// }
