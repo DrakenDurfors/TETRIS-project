@@ -1,7 +1,7 @@
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "function.h" 
-
+int counter = 0;
 int main(void) {
 	
 	/* Set up output pins */
@@ -20,8 +20,11 @@ int main(void) {
 	
 	/* initialize SPI and neccessery ports*/
 	init();
+	TRISECLR = 0xff;
 	display_string(1, "LETS PLAY TETRIS");
 	display_update();
+	delay(100000);
+	showmeny();
 
 	int btns;
 	while(1)
@@ -29,20 +32,27 @@ int main(void) {
 		btns = getbtn();
 		if(btns & 0x1)
 		{
-			//btn1 action from main menu
+			//update display to the game
+			
 		}
 		else if(btns >> 1 & 0x1)
 		{
 			//btn2 action from main menu
-		}
-		else if(btns >> 2 & 0x1)
-		{
-			//btn3 action from main menu
-		}
-		else if(btns >> 3 & 0x1)
-		{
-			//btn4 action from main menu
+			
 		}
 	}
 	return 0;
+}
+void user_isr( void )
+{
+	if(IFS(0) & 0x100 && 1)
+	{
+		//Check buttons and maybe count to 
+		counter++;
+		if(counter == 10)
+		{
+			counter = 0;
+		}
+		IFSCLR(0) = 0x100;
+	}
 }

@@ -43,7 +43,7 @@ void conv_highscore_string()
         {
             highscoreString[i][j] = names[i][j];
         }
-        highscoreString[i][3] = " "; //example at this point "AAA "
+        //highscoreString[i][3] = " "; //example at this point "AAA "
         stringRepres = itoaconv(scorces[i]);
         for(k = 4; k < 16; k++)
         {

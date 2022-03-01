@@ -3,8 +3,8 @@
 #include "function.h"
 
 //for readability
-#define VDD_ENABLE (PORTFSET = 0x40)
-#define VBAT_ENABLED (PORTFSET = 0x20)
+#define VDD_ENABLE (PORTFCLR = 0x40)
+#define VBAT_ENABLED (PORTFCLR = 0x20)
 
 //predefined for oled easy-of-use
 #define BUFF_SIZE_OLED (512)
@@ -29,7 +29,7 @@ int delay(int ms)
 }
 
 /*Disclaimer: This is the same function "spi_send_recv" in mipslabfunc.c from Lab3 */
-unsigned char send_byte_spi(unsigned char bytesToSend) 
+unsigned char send_byte_spi(unsigned char bytesToSend)
 {
     while(!(SPI2STAT & 0x8)); //Check transmitter buffert if its empty then continue
     SPI2BUF = bytesToSend;    //Load and send byte to reciever of slave(OLED)
@@ -79,10 +79,68 @@ void update_display_to(unsigned char *array)
 
 void clearscreen()
 {
+    char ary[512];
     DATA_MODE;
-    for(int i = 0; i < 512; i++)
+    int i;
+    for(i = 0; i < 512; i++)
     {
-        send_byte_spi(0);
+        ary[i] = 0;
+    }
+    update_display_to(ary);
+}
+
+//eftersom en vi har en 20 x 10 array och skrämen är uppdelad i 69x30 
+//betyder det att om en rad innehåller en etta ska 3 bitar vara ettor på displayen, därav används 0x7
+//Resultatet sparas i biarray
+void fields_to_bit_array()
+{
+    int i, j;
+    int row; //32 bit, since we are shifting 3 bits 9 times 
+    for(i = 0; i < 20; i++)
+    {
+        row = 1; //for showing the outline
+        for(j = 9; j >= 0; j--)
+        {
+            row = row << 3;
+            if(playField[19-i][j] != '0')
+            {
+                row |= 0x7;
+            }
+        }
+        row = row << 1; //for showing outline
+        row |= 1;
+        //at this point, row has the whole column value from playField with the witdh 10 translated to witdh 30;
+        for(j = 0; j < 4; j++)
+        {
+            //effectivly writes a 3x3 block for each block in the 20x10 array in the first row
+            bitarray[j][i*3] = row & 0xff;
+            bitarray[j][i*3 + 1] = row & 0xff;
+            bitarray[j][i*3 + 2] = row & 0xff;
+            row = row >> 8; //next set of 8 bits to make a row (on the display) complete
+        }
+    }
+}
+void block_to_bit_array()
+{
+    int i, j, row;
+    for(i = 0; i < 5; i++)
+    {
+        row = 1;
+        for(j = 5; j >= 0; j++)
+        {
+            if(newblock[5-i][j] != 0)
+            {
+                row |= 0x7;
+            }
+        }
+        row = row << 1;
+        row |= 1;
+        for(j = 0; j < 2; j++)
+        {
+            block_bitarray[j][i*3] = row & 0xff;
+            block_bitarray[j][i*3 + 1] = row % 0xff;
+            block_bitarray[j][i*3 + 2] = row % 0xff; 
+        }
     }
 }
 
@@ -96,7 +154,7 @@ void initIoPorts()
 }
 
 //Oled setup initialzation
-void intiOled()
+void initOled()
 {    
     //Oled reset - PORTG (bit #9)
     //Oled data/command select - PORTF (bit #4)
@@ -112,13 +170,13 @@ void intiOled()
     VDD_ENABLE; //VDD on
     delay(10);
     
-    spi_send_byte(0xAE); //Screen turn off command
+    send_byte_spi(0xAE); //Screen turn off command
    
     //reset once
-    PORTGCLR = 0x100;
+    PORTGCLR = 0x200;
     delay(1);
     //then turn on
-    PORTGSET = 0x100;
+    PORTGSET = 0x200;
 
     send_byte_spi(0x8D); //charge pump setting    
     send_byte_spi(0x14); 
@@ -138,21 +196,14 @@ void intiOled()
     send_byte_spi(0xDA); // this enters the COM pin selection (like in a meny)
     send_byte_spi(0x20); // bit 5: scan left to right (1, 0 reverse), bit 4: sequensial pin layout (1, pain), block-like pin layout (0, big chunks)
 
-    /* memory adressing mode to vertical adressing */
-    send_byte_spi(0x20);
-    send_byte_spi(0x01); 
-
-    send_byte_spi(0x21);
-
     /* turn-on display command */
     send_byte_spi(0xAF);
-
 }
 
 void init(){
     initIoPorts();
 
-    /*  SPI-configuration */
+    /*  SPI-configuration (lab3 setup used as reference, for MODE<32,16> and CKP */
     int dataT;
     SPI2CON = 0x0;        // Reset SPI2 module
     IECCLR(1) = 0xE0;     // Turn off Interupt enable bits (7-5) and clear interuptflags
@@ -160,10 +211,23 @@ void init(){
     dataT = SPI2BUF;      // this clears the receive buffert (by reading it, its being cleared)
     SPI2BRG = 4;          // We will send 4096 (32 x 128) possible combination to the OLED screen
                           // SPI2BRG: 4 => baud rate: 80MHz/2([4]+1) = 8MHz 
-    SPI2CONSET = 1 << 10;
-    SPI2STAT = SPI2STAT & ~0x40;   // clear SPIROV status bit, since no overflow has occurd duh
+    SPI2CONCLR = 3 << 10; // we are only sending 16 bits
+    SPI2STAT = SPI2STAT & ~0x40;   // clear SPIROV status bit, since no overflow has occurd
     SPI2CONSET = 0x20;    // bit 5 determins Master/slave operation, SPI2 is Master, hence setting bit #5 
+    SPI2CONSET = 0x40;    // set clock to be active low
     SPI2CONSET = 0x8000;  // turn on SPI module 
 
-    intiOled();
+    //Timer2 setup
+    T2CON = 0;
+    T2CONSET = 0x70;    // setting prescale to 1:256
+    TMR2 = 0;           // timer2 to start count from 0;
+    PR2 = (80000000/256)/20; //preliminar period time of 1/20 sec 
+    T2CONSET = 0x8000;  // start timer2, set bit 16
+
+    IFSCLR(0) = 0x100; //clear potenital T2 interupt flag
+    IECSET(0) = 0x100; //enable to be able interupts for T2 
+    IPCSET(2) = 0x5;
+    enable_interrupt();
+
+    initOled();
 }

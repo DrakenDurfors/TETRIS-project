@@ -6,7 +6,7 @@
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
-#include "function.h"  /* Declatations for these labs */
+#include "function.h" 
 
 /* Declare a helper function which is local to this file */
 static void num32asc( char * s, int ); 
@@ -150,7 +150,7 @@ void display_image(int x, const uint8_t *data) {
 		spi_send_recv(0x22);
 		spi_send_recv(i);
 		
-		spi_send_recv(x & 0xF);
+		spi_send_recv(x & 0xF); 
 		spi_send_recv(0x10 | ((x >> 4) & 0xF));
 		
 		DISPLAY_CHANGE_TO_DATA_MODE;
