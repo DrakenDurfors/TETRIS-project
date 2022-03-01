@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <pic32mx.h> //hope we are allowed to use this library
+#include <pic32mx.h>
+#include "function.h"
 
 // define the size of the 
 #define ROW 20
