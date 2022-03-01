@@ -1,6 +1,9 @@
 #include <stdint.h>   /* Declarations of uint_32 and the like */
+#include <stdlib.h>
+#include <stdio.h>
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "function.h" 
+
 int counter = 0;
 int main(void) {
 	
@@ -24,15 +27,16 @@ int main(void) {
 	display_string(1, "LETS PLAY TETRIS");
 	display_update();
 	delay(100000);
-	showmeny();
 
 	int btns;
 	while(1)
 	{
+		showmeny();
 		btns = getbtn();
 		if(btns & 0x1)
 		{
-			//update display to the game
+			//play a game
+
 			
 		}
 		else if(btns >> 1 & 0x1)

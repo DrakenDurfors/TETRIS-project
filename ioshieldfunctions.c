@@ -102,7 +102,7 @@ void fields_to_bit_array()
         for(j = 9; j >= 0; j--)
         {
             row = row << 3;
-            if(playField[19-i][j] != '0')
+            if(displayField[19-i][j] != '0')
             {
                 row |= 0x7;
             }
@@ -128,7 +128,7 @@ void block_to_bit_array()
         row = 1;
         for(j = 5; j >= 0; j++)
         {
-            if(newblock[5-i][j] != 0)
+            if(nextPiece[5-i][j] != '0')
             {
                 row |= 0x7;
             }
