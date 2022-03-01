@@ -5,7 +5,25 @@
 
 
 //game logic
- 
+#define ROW 20
+#define COL 10
+char displayField[ROW][COL];
+int highscore = 0;
+int level = 0;
+
+char CurrentPiece[5][5] = {
+    {'0', '0', '0', '0', '0'},
+    {'0', '0', '0', '0', '0'},
+    {'0', '0', '0', '0', '0'},
+    {'0', '0', '0', '0', '0'},
+    {'0', '0', '0', '0', '0'}};
+
+char nextPiece[5][5] = {
+    {'0', '0', '0', '0', '0'},
+    {'0', '0', '0', '0', '0'},
+    {'0', '0', '0', '0', '0'},
+    {'0', '0', '0', '0', '0'},
+    {'0', '0', '0', '0', '0'}};
 
 //game logic functions:
 void placeBlock();
