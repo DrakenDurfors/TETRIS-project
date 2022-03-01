@@ -1,2 +1,0 @@
-interupt.S.o: interupt.S
-interupt.S :

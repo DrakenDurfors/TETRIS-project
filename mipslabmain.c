@@ -36,8 +36,8 @@ int main(void) {
 		if(btns & 0x1)
 		{
 			//play a game
-
-			
+			name_meny();
+			TRISE = 1;
 		}
 		else if(btns >> 1 & 0x1)
 		{

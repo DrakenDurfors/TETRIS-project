@@ -17,7 +17,7 @@ void showmeny()
 void game_array()
 {
     int i, j;
-    //fields_to_bit_array(); //updates global variabel bitarray 
+    fields_to_bit_array(); //updates global variabel bitarray 
     for(i = 0; i < 4; i++) //chose page1 and page2
     {
         COMMAND_MODE;
@@ -83,5 +83,59 @@ void show_nextblock()
 //meny after gamover
 void name_meny()
 {
-    
+    clearscreen();
+    display_string(0, "Enter a name:");
+    display_string(1, "AAA");
+    display_string(2, "Use buttons");
+    display_string(3, "");
+    display_update();
+    char letters[26] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    char name[3] = {'A', 'A', 'A'};
+    int score = 4;
+    int CurrentA, CurrentB, CurrentC = 0;
+    char flag = 1;
+    while (flag)
+    {
+        int buttons = getbtn();// need a delay, its updating to quickly
+        if(buttons >> 2 & 0x1) //1# letter
+        {
+            if(CurrentA < 25 && CurrentA >= 0)
+            {
+                CurrentA++;
+            }
+            else{
+                CurrentA = 0;
+            }
+            name[0] = letters[CurrentA];
+        }
+        if(buttons >> 1 & 0x1) //2# letter
+        {
+            if(CurrentB < 25 && CurrentB >= 0)
+            {
+                CurrentB++;
+            }
+            else{
+                CurrentB = 0;
+            }
+            name[1] = letters[CurrentB];
+        }
+        if(buttons & 0x1) //3# letter increment
+        {
+            if(CurrentC < 25 && CurrentC >= 0)
+            {
+                CurrentC++;
+            }
+            else{
+                CurrentC = 0;
+            }
+            name[2] = letters[CurrentC];
+        }
+        if(buttons >> 3 & 0x1) //Exit setting
+        {
+            flag = 0;
+        }
+        display_string(1, name);
+        display_update();
+    }
+    update_scores(score, name);
 }
