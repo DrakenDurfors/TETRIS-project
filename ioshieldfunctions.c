@@ -92,57 +92,57 @@ void clearscreen()
 //eftersom en vi har en 20 x 10 array och skrämen är uppdelad i 69x30 
 //betyder det att om en rad innehåller en etta ska 3 bitar vara ettor på displayen, därav används 0x7
 //Resultatet sparas i biarray
-// void fields_to_bit_array()
-// {
-//     int i, j;
-//     int row; //32 bit, since we are shifting 3 bits 9 times 
-//     for(i = 0; i < 20; i++)
-//     {
-//         row = 1; //for showing the outline
-//         for(j = 9; j >= 0; j--)
-//         {
-//             row = row << 3;
-//             if(displayField[19-i][j] != '0')
-//             {
-//                 row |= 0x7;
-//             }
-//         }
-//         row = row << 1; //for showing outline
-//         row |= 1;
-//         //at this point, row has the whole column value from playField with the witdh 10 translated to witdh 30;
-//         for(j = 0; j < 4; j++)
-//         {
-//             //effectivly writes a 3x3 block for each block in the 20x10 array in the first row
-//             bitarray[j][i*3] = row & 0xff;
-//             bitarray[j][i*3 + 1] = row & 0xff;
-//             bitarray[j][i*3 + 2] = row & 0xff;
-//             row = row >> 8; //next set of 8 bits to make a row (on the display) complete
-//         }
-//     }
-// }
-// void block_to_bit_array()
-// {
-//     int i, j, row;
-//     for(i = 0; i < 5; i++)
-//     {
-//         row = 1;
-//         for(j = 5; j >= 0; j++)
-//         {
-//             if(nextPiece[5-i][j] != '0')
-//             {
-//                 row |= 0x7;
-//             }
-//         }
-//         row = row << 1;
-//         row |= 1;
-//         for(j = 0; j < 2; j++)
-//         {
-//             block_bitarray[j][i*3] = row & 0xff;
-//             block_bitarray[j][i*3 + 1] = row % 0xff;
-//             block_bitarray[j][i*3 + 2] = row % 0xff; 
-//         }
-//     }
-// }
+void fields_to_bit_array()
+{
+    int i, j;
+    int row; //32 bit, since we are shifting 3 bits 9 times 
+    for(i = 0; i < 20; i++)
+    {
+        row = 1; //for showing the outline
+        for(j = 9; j >= 0; j--)
+        {
+            row = row << 3;
+            if(displayField[19-i][j] != '0')
+            {
+                row |= 0x7;
+            }
+        }
+        row = row << 1; //for showing outline
+        row |= 1;
+        //at this point, row has the whole column value from playField with the witdh 10 translated to witdh 30;
+        for(j = 0; j < 4; j++)
+        {
+            //effectivly writes a 3x3 block for each block in the 20x10 array in the first row
+            bitarray[j][i*3] = row & 0xff;
+            bitarray[j][i*3 + 1] = row & 0xff;
+            bitarray[j][i*3 + 2] = row & 0xff;
+            row = row >> 8; //next set of 8 bits to make a row (on the display) complete
+        }
+    }
+}
+void block_to_bit_array() //need to test
+{
+    int i, j, row;
+    for(i = 0; i < 5; i++)
+    {
+        row = 1;
+        for(j = 5; j >= 0; j++)
+        {
+            if(nextPiece[5-i][j] != '0')
+            {
+                row |= 0x7;
+            }
+        }
+        row = row << 1;
+        row |= 1;
+        for(j = 0; j < 2; j++)
+        {
+            block_bitarray[j][i*3] = row & 0xff;
+            block_bitarray[j][i*3 + 1] = row % 0xff;
+            block_bitarray[j][i*3 + 2] = row % 0xff; 
+        }
+    }
+}
 
 //IO ports initilization
 void initIoPorts()
@@ -211,10 +211,10 @@ void init(){
     dataT = SPI2BUF;      // this clears the receive buffert (by reading it, its being cleared)
     SPI2BRG = 4;          // We will send 4096 (32 x 128) possible combination to the OLED screen
                           // SPI2BRG: 4 => baud rate: 80MHz/2([4]+1) = 8MHz 
-    SPI2CONCLR = 3 << 10; // we are only sending 16 bits
+    SPI2CONCLR = 3 << 10; // we are only sending 16 bits (MODE)
     SPI2STAT = SPI2STAT & ~0x40;   // clear SPIROV status bit, since no overflow has occurd
     SPI2CONSET = 0x20;    // bit 5 determins Master/slave operation, SPI2 is Master, hence setting bit #5 
-    SPI2CONSET = 0x40;    // set clock to be active low
+    SPI2CONSET = 0x40;    // set clock to be active low (CKP)
     SPI2CONSET = 0x8000;  // turn on SPI module 
 
     //Timer2 setup
