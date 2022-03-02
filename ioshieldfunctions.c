@@ -121,15 +121,15 @@ void fields_to_bit_array()
         }
     }
 }
-void block_to_bit_array() //need to test
+void block_to_bit_array()
 {
     int i, j, row;
     for(i = 0; i < 5; i++)
     {
         row = 1;
-        for(j = 5; j >= 0; j++)
+        for(j = 4; j >= 0; j--)
         {
-            if(nextPiece[5-i][j] != '0')
+            if(nextPiece[4-i][j] != '0')
             {
                 row |= 0x7;
             }
@@ -169,13 +169,13 @@ void initOled()
     COMMAND_MODE; 
     delay(100);
     VDD_ENABLE; //VDD on
-    delay(10);
+    delay(100);
     
     send_byte_spi(0xAE); //Screen turn off command
    
     //reset once
     PORTGCLR = 0x200;
-    delay(1);
+    delay(10);
     //then turn on
     PORTGSET = 0x200;
 
@@ -222,7 +222,7 @@ void init(){
     T2CON = 0;
     T2CONSET = 0x70;    // setting prescale to 1:256
     TMR2 = 0;           // timer2 to start count from 0;
-    PR2 = (80000000/256)/20; //preliminar period time of 1/20 sec 
+    PR2 = (80000000/256)/50; //preliminar period time of 1/20 sec 
     T2CONSET = 0x8000;  // start timer2, set bit 16
 
     IFSCLR(0) = 0x100; //clear potenital T2 interupt flag

@@ -18,6 +18,8 @@ void game_array()
 {
     int i, j;
     fields_to_bit_array(); //updates global variabel bitarray to current array values in the game
+    block_to_bit_array();
+
     for(i = 0; i < 4; i++)
     {
         COMMAND_MODE;
@@ -30,13 +32,17 @@ void game_array()
         DATA_MODE;
         for(j = 0; j < 128; j++) 
         {
-            if(j < 70)
+            if(j < 60)
             {
-                send_byte_spi(bitarray[i][j-1]);
+                send_byte_spi(bitarray[i][j]);
             }
-            else if(j == 70)
+            else if(j == 60)
             {
                 send_byte_spi(0xFF);
+            }
+            else if(j > 70 && (i == 1 || i == 2))
+            {
+                send_byte_spi(block_bitarray[i][j - 71]);
             }
             else
             {
@@ -44,43 +50,12 @@ void game_array()
             }                
         }
     }
-    show_nextblock();
+    
 }
 
-//nextblock indicator, 
-void show_nextblock()
-{
-    int x = 96;
-    int i, j;
-    for (i = 1; i < 3; i++)
-    {
-        COMMAND_MODE;
-        send_byte_spi(0x22);
-        send_byte_spi(i);
 
-        //This code part comes from the display_image function from lab3
-        send_byte_spi(x & 0xF); 
-		send_byte_spi(0x10 | ((x >> 4) & 0xF));
-        for(j = 0; j < 32; j++)
-        {
-            if(j > 8 && j < 25)
-            {
-                send_byte_spi(block_bitarray[i-1][j-1]);
-            }
-            else if(j == 8 || j == 25)
-            {
-                send_byte_spi(0xff);
-            }
-            else
-            {
-                send_byte_spi(0x0);
-            }
-        }
-    }
-}
 void game_over()
 {
-    clearscreen();
     //animation of everything being filld with white
     int i, j;
     for(i = 0; i < 4; i++)
@@ -112,7 +87,6 @@ void name_meny()
     display_update();
     char letters[26] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     char name[3] = {'A', 'A', 'A'};
-    int score = highscore;
     int CurrentA, CurrentB, CurrentC = 0;
     char flag = 1;
     while (flag)
@@ -159,5 +133,6 @@ void name_meny()
         display_string(1, (name));
         display_update();
     }
-    update_scores(score, name);
+    update_scores(highscore, name);
+    PORTE = 1; //Go to main menu
 }

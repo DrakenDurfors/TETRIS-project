@@ -16,17 +16,17 @@ char CurrentPiece[5][5];
 char nextPiece[5][5];
 
 //game logic functions:
-void placeBlock();
-void removeBlock();
-void replaceArray(char arrayA[5][5], char arrayB[5][5]);
-void pickBlock(char block[5][5]);
-void newBlock();
+void placeBlock(); //
+void removeBlock(); //
+void replaceArray(char arrayA[5][5], char arrayB[5][5]); //
+void pickBlock(char block[5][5]); //
+void newBlock(); //
 void moveLeft();
 void moveRight();
 void moveDown();
 void rotate();
 void getDisplay();
-void displayTest();
+void displayTest(); //
 void startupReset();
 
 
@@ -51,6 +51,7 @@ void init();
 void enable_interrupt(void);
 void fields_to_bit_array();
 void block_to_bit_array();
+static void num32asc( char * s, int n );
 
 // this part of code comes from Lab3, not ours!
 const uint8_t font[128*8];

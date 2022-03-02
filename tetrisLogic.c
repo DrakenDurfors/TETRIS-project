@@ -59,7 +59,7 @@ void replaceArray(char arrayA[5][5], char arrayB[5][5])
 void pickBlock(char block[5][5])
 {
 
-    int random = TMR2 & 7;
+    int random = TMR2 % 7;
     switch (random)
     {
     case 0:;
@@ -155,8 +155,7 @@ void newBlock()
     else
     {
         // proper game over function needed:
-        display_string(1, "Game over!");
-        display_string(2, "Enter name:");
+        PORTE = 4;
     }
 }
 
@@ -392,6 +391,8 @@ void startupReset()
     // get new pieces
     pickBlock(CurrentPiece);
     pickBlock(nextPiece);
+
+    newBlock();
 }
 
 // void manualStart()
