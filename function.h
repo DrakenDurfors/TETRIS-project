@@ -8,22 +8,12 @@
 #define ROW 20
 #define COL 10
 char displayField[ROW][COL];
-int highscore = 0;
-int level = 0;
+int highscore;
+int level;
 
-char CurrentPiece[5][5] = {
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'}};
+char CurrentPiece[5][5];
 
-char nextPiece[5][5] = {
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'},
-    {'0', '0', '0', '0', '0'}};
+char nextPiece[5][5];
 
 //game logic functions:
 void placeBlock();
@@ -45,6 +35,7 @@ void startupReset();
 unsigned char bitarray[4][60];
 unsigned char block_bitarray[2][24];
 
+//for SPI, Display and misc
 char getbtn();
 int delay(int ms);
 unsigned char send_byte_spi(unsigned char bytesToSend);
@@ -67,10 +58,11 @@ char textbuffer[4][16];
 char *itoaconv(int num);
 
 //for highscore
-char highscoreString[3][16]; //like textbuffert, 16 characters long
+char highscoreString[3][16]; //like textbuffert, 16 characters long, only 3 since we only have 4 pages to display text on
 int scorces[3];
 char names[3][3];
 void update_scores(int score, char* name);
+void show_highscores();
 
 //for screens
 void showmeny();

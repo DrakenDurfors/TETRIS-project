@@ -7,8 +7,8 @@
 void showmeny()
 {
     display_string(0, "Meny:");
-    display_string(1, "0 Play a game");
-    display_string(2, "1 Highscorces");
+    display_string(1, "1 Play a game");
+    display_string(2, "2 Highscorces");
     display_string(3, "");
     display_update();
 }
@@ -17,8 +17,8 @@ void showmeny()
 void game_array()
 {
     int i, j;
-    fields_to_bit_array(); //updates global variabel bitarray 
-    for(i = 0; i < 4; i++) //chose page1 and page2
+    fields_to_bit_array(); //updates global variabel bitarray to current array values in the game
+    for(i = 0; i < 4; i++)
     {
         COMMAND_MODE;
         send_byte_spi(0x22);
@@ -75,9 +75,30 @@ void show_nextblock()
             {
                 send_byte_spi(0x0);
             }
-
         }
     }
+}
+void game_over()
+{
+    clearscreen();
+    //animation of everything being filld with white
+    int i, j;
+    for(i = 0; i < 4; i++)
+    {
+        COMMAND_MODE;
+        send_byte_spi(0x22);
+        send_byte_spi(i);
+        
+        send_byte_spi(0x0);
+        send_byte_spi(0x10);
+        DATA_MODE;
+        for(j = 0; j < 60; j++)
+        {
+            send_byte_spi(0xff);
+            delay(1000);
+        }
+    }
+    
 }
 
 //meny after gamover
@@ -85,13 +106,13 @@ void name_meny()
 {
     clearscreen();
     display_string(0, "Enter a name:");
-    display_string(1, "AAA");
-    display_string(2, "Use buttons");
-    display_string(3, "");
+    display_string(1, "A A A");
+    display_string(2, "");
+    display_string(3, "Use btns 3 2 1");
     display_update();
     char letters[26] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     char name[3] = {'A', 'A', 'A'};
-    int score = 4;
+    int score = highscore;
     int CurrentA, CurrentB, CurrentC = 0;
     char flag = 1;
     while (flag)
@@ -130,11 +151,12 @@ void name_meny()
             }
             name[2] = letters[CurrentC];
         }
-        if(buttons >> 3 & 0x1) //Exit setting
+        if(buttons >> 3 & 0x1) //Exit setting, btn4
         {
             flag = 0;
+            break;
         }
-        display_string(1, name);
+        display_string(1, (name));
         display_update();
     }
     update_scores(score, name);

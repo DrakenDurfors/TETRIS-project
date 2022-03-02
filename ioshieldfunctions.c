@@ -18,6 +18,7 @@ char getbtn()
     return btns;                        //return one nibble with the information from (and in order) button wfe4,3,2,1 
 }
 
+
 int delay(int ms)
 {
     int timeToDelayMS = ms * 100;
