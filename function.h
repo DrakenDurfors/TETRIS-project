@@ -2,11 +2,14 @@
 #include <stdint.h>
 #define COMMAND_MODE (PORTFCLR = 0x10)
 #define DATA_MODE (PORTFSET = 0x10)
+char directory;
 
 
 //game logic
 #define ROW 20
 #define COL 10
+#define startR 1
+#define startC 5
 char displayField[ROW][COL];
 int highscore;
 int level;
@@ -29,11 +32,12 @@ void getDisplay();
 void displayTest(); //
 void startupReset();
 
-
-
+//animation
+char tempField[30][60];
+void moveLeftAnnimation();
 
 unsigned char bitarray[4][60];
-unsigned char block_bitarray[2][24];
+unsigned char block_bitarray[2][14];
 
 //for SPI, Display and misc
 char getbtn();
@@ -70,5 +74,15 @@ void showmeny();
 void game_array();
 void show_nextblock();
 void name_meny();
+
+//for external LCD display
+typedef enum {Inst, Data} mode;
+void lcdInit();
+char print_lcd(char *str);
+void clear_lcd();
+void wait_lcd();
+void lcdwrite(char content, mode md);
+char lcdread();
+void lcd_clear();
 
 

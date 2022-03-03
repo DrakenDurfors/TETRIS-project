@@ -4,19 +4,23 @@
 #include <pic32mx.h> /* Declarations of system-specific addresses etc */
 #include "function.h"
 
-#define ToMENY (PORTE = 1)
-#define ToGAME (PORTE = 2)
-#define ToEND (PORTE = 4)
-#define ToNAME (PORTE = 8)
-#define ToHIGHSCORE (PORTE = 16)
+#define ToMENY (directory = 1)
+#define ToGAME (directory = 2)
+#define ToEND (directory = 4)
+#define ToNAME (directory = 8)
+#define ToHIGHSCORE (directory = 16)
+#define ToEgg (directory = 32)
 
-#define AtMENY (PORTE == 1)
-#define AtGAME (PORTE == 2)
-#define AtEND (PORTE == 4)
-#define AtNAME (PORTE == 8)
-#define AtHIGHSCORE (PORTE == 16)
+#define AtMENY (directory == 1)
+#define AtGAME (directory == 2)
+#define AtEND (directory == 4)
+#define AtNAME (directory == 8)
+#define AtHIGHSCORE (directory == 16)
+#define AtEgg (directory == 32)
+
 int counter = 0;
 int btns;
+
 // PORTE as a global game directory
 // 1 = meny
 // 2 = game
@@ -54,6 +58,7 @@ int main(void)
 		if (btns & 0x1)
 		{
 			// initialize game field
+			highscore = 0;
 			startupReset();
 			ToGAME;
 			while(AtGAME);
@@ -65,6 +70,10 @@ int main(void)
 		{
 			ToHIGHSCORE;
 			while(AtHIGHSCORE);
+		}
+		else if (btns >> 2 & 0x1){
+			ToEgg;
+			while(AtEgg);
 		}
 	}
 	return 0;
@@ -108,8 +117,11 @@ void user_isr(void)
 				game_array();
 			}
 			
-			if (counter %(80-4*level) == 0)
+			if (counter % (80-8*level) == 0)
 			{
+				if(highscore >= ((level+1)*(level+1)*100) && level < 9){
+					level +=1;
+				}
 				moveDown();
 				getDisplay();
 				game_array();
@@ -119,6 +131,15 @@ void user_isr(void)
 				// do neccesary checks to update the logical array, this is for the game_array to update the Display correctly
 				counter = 0;
 			}
+			char string_score[8];
+			int curnint = highscore;
+			int i;
+			for(i = 7; i >= 0; i--)
+			{
+				string_score[i] = curnint % 10 + '0';
+				curnint /= 10;
+			}
+			print_lcd("string");
 		}
 		if (AtEND)
 		{
@@ -139,7 +160,15 @@ void user_isr(void)
 		if (AtNAME)
 		{
 			name_meny();
+			
 			ToMENY;
+		}
+		if(AtEgg){
+			show_egg();
+			btns = getbtn();
+			if(btns >> 3 & 1){
+				ToMENY;
+			}
 		}
 		IFSCLR(0) = 0x100;
 	}

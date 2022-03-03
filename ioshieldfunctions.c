@@ -97,7 +97,7 @@ void fields_to_bit_array()
 {
     int i, j;
     int row; //32 bit, since we are shifting 3 bits 9 times 
-    for(i = 0; i < 20; i++)
+    for(i = 0; i < 20; i++)                  
     {
         row = 1; //for showing the outline
         for(j = 9; j >= 0; j--)
@@ -126,21 +126,23 @@ void block_to_bit_array()
     int i, j, row;
     for(i = 0; i < 5; i++)
     {
-        row = 1;
+        row = 0;
         for(j = 4; j >= 0; j--)
         {
+            row = row << 3;
             if(nextPiece[4-i][j] != '0')
             {
                 row |= 0x7;
             }
         }
         row = row << 1;
-        row |= 1;
+        row |= 0x1;
         for(j = 0; j < 2; j++)
         {
             block_bitarray[j][i*3] = row & 0xff;
-            block_bitarray[j][i*3 + 1] = row % 0xff;
-            block_bitarray[j][i*3 + 2] = row % 0xff; 
+            block_bitarray[j][i*3 + 1] = row & 0xff;
+            block_bitarray[j][i*3 + 2] = row & 0xff;
+            row = row >> 8;
         }
     }
 }
@@ -203,6 +205,7 @@ void initOled()
 
 void init(){
     initIoPorts();
+    lcdInit();
 
     /*  SPI-configuration (lab3 setup used as reference, for MODE<32,16> and CKP */
     int dataT;
