@@ -381,7 +381,6 @@ void show_egg()
                 {
                     if (t == 0)
                     {
-                        send_byte_spi(0b00000111);
                     }
                     else if (t == 1)
                     {

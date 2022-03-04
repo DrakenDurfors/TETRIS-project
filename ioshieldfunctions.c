@@ -231,7 +231,7 @@ void init(){
     IFSCLR(0) = 0x100; //clear potenital T2 interupt flag
     IECSET(0) = 0x100; //enable to be able interupts for T2 
     IPCSET(2) = 0x5;
-    enable_interrupt();
+    asm volatile("ei"); //assembly instruction to enable interuppts
 
     initOled();
 }
