@@ -59,6 +59,7 @@ int main(void)
 		{
 			// initialize game field
 			highscore = 0;
+			level = 0;
 			startupReset();
 			ToGAME;
 			while(AtGAME);
